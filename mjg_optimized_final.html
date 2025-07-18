@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>他在你的回答里盛开</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Zhi+Mang+Xing&family=Long+Cang&display=swap');
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Zhi Mang Xing', cursive;
+      background-color: #f8c6d8;
+      overflow-x: hidden;
+      color: #000;
+    }
+    #photo {
+      position: fixed;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 150px;
+      height: 150px;
+      border-radius: 20px;
+      object-fit: cover;
+      z-index: 999;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    }
+    .question {
+      margin: 180px 20px 40px;
+      padding: 20px;
+      background: #fcdce4;
+      border-radius: 16px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      font-size: 22px;
+    }
+    .options button {
+      display: block;
+      width: 100%;
+      margin: 8px 0;
+      padding: 12px;
+      background-color: #ffaec9;
+      border: none;
+      border-radius: 8px;
+      font-size: 20px;
+      font-family: 'Zhi Mang Xing', cursive;
+      color: white;
+    }
+    .options button.selected {
+      background-color: #ff69b4;
+    }
+    .final-card {
+      margin: 40px;
+      padding: 20px;
+      background: white;
+      border-radius: 12px;
+      font-size: 20px;
+      font-family: 'Long Cang', cursive;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .floating-petal {
+      position: fixed;
+      width: 20px;
+      height: 20px;
+      background-size: cover;
+      z-index: 0;
+      pointer-events: none;
+    }
+    #progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 0%;
+      height: 6px;
+      background: pink;
+      z-index: 1000;
+      transition: width 0.5s;
+    }
+    #intro {
+      position: fixed;
+      width: 100%;
+      height: 100vh;
+      background-color: #fffafc;
+      z-index: 2000;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 40px;
+      font-size: 22px;
+      animation: fadein 2s;
+    }
+    @keyframes fadein {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    #downloadBtn {
+      display: block;
+      margin: 20px auto;
+      padding: 10px 20px;
+      background: pink;
+      border: none;
+      border-radius: 10px;
+      font-family: 'Zhi Mang Xing';
+      font-size: 18px;
+    }
+    .apple-line {
+      font-size: 36px;
+      font-weight: bold;
+    }
+    .apple-line img {
+      width: 36px;
+      vertical-align: middle;
+      margin-left: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div id="intro">
+    <div class="apple-line">“吃苹果”<img src="https://cdn-icons-png.flaticon.com/512/590/590685.png" /></div>
+    <p>是你们的小秘密，是只有你和他知道的亲密暗号。<br/>来吧，拿起这份问卷，在暧昧与心动之间，一起品尝快乐。</p>
+    <button onclick="document.getElementById('intro').style.display='none'">进入</button>
+  </div>
+  <div id="progress"></div>
+  <input type="file" accept="image/*" id="imgUpload" style="margin:20px" />
+  <input type="text" id="nameInput" placeholder="请输入mjg的姓名" style="margin: 20px"/>
+  <button onclick="start()">开始问卷</button>
+  <img id="photo" style="display:none" />
+  <div id="questionContainer"></div>
+  <div id="finalCard" class="final-card" style="display:none"></div>
+  <button id="downloadBtn" onclick="downloadLoveLetter()" style="display:none">保存情书</button>
+  <iframe style="display:none" src="https://www.bilibili.com/blackboard/html5player.html?bvid=BV1Xu4m1A7Wn&autoplay=1&loop=1" allow="autoplay" width="0" height="0"></iframe>
+
+  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+  <script>
+    let name = "";
+    const questions = [
+      { text: name => \`\${name}第一次和你四目相对的时候，你在想什么？\`, options: ["他真好看", "我心动了", "不敢看他", "有点像某个明星", "怕他听见我的心跳"] },
+      { text: name => \`如果\${name}在梦里出现三次，你会怎么理解？\`, options: ["注定有缘", "我想他了", "他想我了", "这梦是预兆", "继续梦"] },
+    ];
+
+    let answers = [];
+    let current = 0;
+
+    function start() {
+      const file = document.getElementById('imgUpload').files[0];
+      name = document.getElementById('nameInput').value.trim();
+      if (!file || !name) return alert('请上传照片并输入姓名');
+
+      const photo = document.getElementById('photo');
+      const reader = new FileReader();
+      reader.onload = () => {
+        photo.src = reader.result;
+        photo.style.display = 'block';
+      };
+      reader.readAsDataURL(file);
+
+      document.getElementById('imgUpload').remove();
+      document.getElementById('nameInput').remove();
+      document.querySelector('button').remove();
+
+      renderQuestion();
+      generateFloating("https://i.postimg.cc/x1cmcT0J/petal.png");
+    }
+
+    function renderQuestion() {
+      document.getElementById('questionContainer').innerHTML = '';
+      const qData = questions[current];
+      const qText = qData.text(name);
+      const container = document.getElementById('questionContainer');
+
+      const div = document.createElement('div');
+      div.className = 'question';
+      div.innerHTML = \`<p>\${qText}</p>\`;
+
+      const optionsDiv = document.createElement('div');
+      optionsDiv.className = 'options';
+
+      qData.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.innerText = opt;
+        btn.onclick = () => {
+          btn.classList.add('selected');
+          btn.disabled = true;
+          const textarea = div.querySelector('textarea');
+          answers.push({ q: qText, a: opt, custom: textarea.value });
+
+          current++;
+          document.getElementById('progress').style.width = (current / questions.length * 100) + '%';
+
+          if (current < questions.length) {
+            setTimeout(renderQuestion, 500);
+          } else {
+            setTimeout(renderFinal, 500);
+          }
+        };
+        optionsDiv.appendChild(btn);
+      });
+
+      const textarea = document.createElement('textarea');
+      textarea.placeholder = '你的专属答案';
+      textarea.style = 'width:100%;margin-top:10px;height:60px;border-radius:8px;padding:8px;font-family: Zhi Mang Xing; font-size: 18px;';
+
+      div.appendChild(optionsDiv);
+      div.appendChild(textarea);
+      container.appendChild(div);
+    }
+
+    function renderFinal() {
+      document.getElementById('questionContainer').innerHTML = '';
+      const card = document.getElementById('finalCard');
+      card.style.display = 'block';
+      card.innerHTML = \`<h2>写给 \${name} 的情书</h2><p></p>\`;
+      answers.forEach((ans, i) => {
+        const cleanQ = ans.q.replace(/你在想什么？|你会怎么理解？|\?$/, '');
+        const custom = ans.custom?.trim();
+        const response = custom ? \`\${cleanQ}你\${custom}\` : \`\${cleanQ}你\${ans.a}\`;
+        card.innerHTML += \`<p>\${i + 1}. \${response}</p>\`;
+      });
+      card.innerHTML += \`<p>—— 这是你写给 \${name} 的一封浪漫情书</p>\`;
+      card.scrollIntoView({ behavior: 'smooth' });
+      document.getElementById('downloadBtn').style.display = 'block';
+    }
+
+    function downloadLoveLetter() {
+      html2canvas(document.getElementById("finalCard")).then(canvas => {
+        const link = document.createElement('a');
+        link.download = name + "_love_letter.png";
+        link.href = canvas.toDataURL();
+        link.click();
+      });
+    }
+
+    function generateFloating(imgUrl) {
+      setInterval(() => {
+        const el = document.createElement('div');
+        el.className = \`floating-petal\`;
+        el.style.left = Math.random() * window.innerWidth + 'px';
+        el.style.top = '-40px';
+        el.style.backgroundImage = \`url(\${imgUrl})\`;
+        el.style.opacity = 0.6;
+        document.body.appendChild(el);
+        let angle = Math.random() * 2 - 1;
+        let y = -40;
+        function fall() {
+          y += 1.5;
+          el.style.top = y + 'px';
+          el.style.transform = \`rotate(\${angle}deg)\`;
+          if (y > window.innerHeight) el.remove();
+          else requestAnimationFrame(fall);
+        }
+        fall();
+      }, 2000);
+    }
+  </script>
+</body>
+</html>
