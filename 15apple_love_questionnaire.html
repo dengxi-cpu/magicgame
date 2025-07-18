@@ -1,0 +1,1349 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>吃苹果的小秘密</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'midnight': '#0f0f23',
+                        'cosmic': '#1a1a2e',
+                        'nebula': '#16213e',
+                        'aurora': '#e91e63',
+                        'rose-glow': '#ff6b9d',
+                        'pink-dream': '#ffeaa7'
+                    },
+                    fontFamily: {
+                        'elegant': ['Inter', 'system-ui', 'sans-serif'],
+                        'script': ['Dancing Script', 'cursive'],
+                        'chinese': ['Ma Shan Zheng', 'serif'],
+                        'handwrite': ['Kalam', 'cursive'],
+                        'serif': ['Noto Serif SC', 'serif'],
+                        'calligraphy': ['Source Han Serif SC', 'Noto Serif SC', 'serif'],
+                        'vintage': ['Zhi Mang Xing', 'cursive'],
+                    },
+                    backgroundImage: {
+                        'cosmic-gradient': 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                        'aurora-gradient': 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+                        'dream-gradient': 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Dancing+Script:wght@400;500;600;700&family=Ma+Shan+Zheng&family=Kalam:wght@400;700&family=Noto+Serif+SC:wght@400;500;600;700&family=Source+Han+Serif+SC:wght@400;500;600;700&family=Zhi+Mang+Xing&display=swap" rel="stylesheet">
+    <style>
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(5deg); }
+        }
+        @keyframes fall {
+            0% { transform: translateY(-100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.8; }
+            90% { opacity: 0.8; }
+            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+        }
+        @keyframes glow {
+            0%, 100% { 
+                box-shadow: 0 0 30px rgba(233, 30, 99, 0.3), 
+                           0 0 60px rgba(233, 30, 99, 0.1),
+                           inset 0 1px 0 rgba(255, 255, 255, 0.1); 
+            }
+            50% { 
+                box-shadow: 0 0 40px rgba(233, 30, 99, 0.5), 
+                           0 0 80px rgba(233, 30, 99, 0.2),
+                           inset 0 1px 0 rgba(255, 255, 255, 0.2); 
+            }
+        }
+        @keyframes pulse-glow {
+            0%, 100% { 
+                box-shadow: 0 0 20px rgba(233, 30, 99, 0.4);
+                transform: scale(1);
+            }
+            50% { 
+                box-shadow: 0 0 30px rgba(233, 30, 99, 0.7);
+                transform: scale(1.05);
+            }
+        }
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        
+        .floating { animation: float 4s ease-in-out infinite; }
+        .falling { animation: fall 10s linear infinite; }
+        .glow-effect { animation: glow 3s ease-in-out infinite; }
+        .pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        .glass-button {
+            background: linear-gradient(145deg, rgba(233, 30, 99, 0.8), rgba(245, 87, 108, 0.6));
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(233, 30, 99, 0.3);
+        }
+        
+        .shimmer-effect {
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            background-size: 200% 100%;
+            animation: shimmer 2s infinite;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .cosmic-bg {
+            background: radial-gradient(ellipse at top, #1a1a2e 0%, #0f0f23 100%);
+            position: relative;
+        }
+        
+        .cosmic-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(233, 30, 99, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(245, 87, 108, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 60% 20%, rgba(255, 107, 157, 0.05) 0%, transparent 50%);
+        }
+    </style>
+</head>
+<body class="font-elegant cosmic-bg min-h-screen overflow-hidden relative">
+    
+    <!-- 预览框架 -->
+    <div class="hidden fixed top-4 left-4 right-4 z-50 glass-card rounded-2xl p-6" id="preview-mode">
+        <div class="text-white font-medium mb-4 font-serif">页面预览模式</div>
+        <div class="flex space-x-4 overflow-x-auto">
+            <div class="flex-shrink-0 w-52 h-36 glass-card rounded-xl p-4 cursor-pointer hover:border-aurora/50 transition-all group" onclick="showPage('cover')">
+                <div class="text-sm text-pink-300 font-medium mb-2 font-serif">封面页</div>
+                <div class="text-center text-2xl group-hover:scale-110 transition-transform">🍎</div>
+                <div class="text-xs text-gray-400 mt-2 font-serif">情感引入</div>
+            </div>
+            <div class="flex-shrink-0 w-52 h-36 glass-card rounded-xl p-4 cursor-pointer hover:border-aurora/50 transition-all group" onclick="showPage('input')">
+                <div class="text-sm text-pink-300 font-medium mb-2 font-serif">输入页</div>
+                <div class="text-center text-2xl group-hover:scale-110 transition-transform">👤</div>
+                <div class="text-xs text-gray-400 mt-2 font-serif">个性化设置</div>
+            </div>
+            <div class="flex-shrink-0 w-52 h-36 glass-card rounded-xl p-4 cursor-pointer hover:border-aurora/50 transition-all group" onclick="showPage('quiz')">
+                <div class="text-sm text-pink-300 font-medium mb-2 font-serif">问卷页</div>
+                <div class="text-center text-2xl group-hover:scale-110 transition-transform">📝</div>
+                <div class="text-xs text-gray-400 mt-2 font-serif">情感挖掘</div>
+            </div>
+            <div class="flex-shrink-0 w-52 h-36 glass-card rounded-xl p-4 cursor-pointer hover:border-aurora/50 transition-all group" onclick="showPage('result')">
+                <div class="text-sm text-pink-300 font-medium mb-2 font-serif">情书页</div>
+                <div class="text-center text-2xl group-hover:scale-110 transition-transform">💌</div>
+                <div class="text-xs text-gray-400 mt-2 font-serif">情感输出</div>
+            </div>
+        </div>
+        <button onclick="togglePreview()" class="mt-4 px-6 py-2 glass-button text-white rounded-xl font-medium hover:scale-105 transition-all font-serif">
+            退出预览
+        </button>
+    </div>
+
+    <!-- 飘落动画背景 -->
+    <div class="fixed inset-0 pointer-events-none z-10" id="animation-bg">
+        <!-- 爱心飘落 -->
+        <div class="absolute top-0 left-[5%] text-aurora text-xl falling opacity-60" style="animation-delay: 0s;">💕</div>
+        <div class="absolute top-0 left-[25%] text-rose-glow text-lg falling opacity-70" style="animation-delay: 1s;">💖</div>
+        <div class="absolute top-0 left-[45%] text-pink-dream text-xl falling opacity-50" style="animation-delay: 2s;">💗</div>
+        <div class="absolute top-0 left-[65%] text-aurora text-lg falling opacity-80" style="animation-delay: 3s;">💝</div>
+        <div class="absolute top-0 left-[85%] text-rose-glow text-xl falling opacity-60" style="animation-delay: 4s;">💕</div>
+        
+        <!-- 樱花飘落 -->
+        <div class="absolute top-0 left-[15%] text-pink-300 text-lg falling opacity-60" style="animation-delay: 0.5s;">🌸</div>
+        <div class="absolute top-0 left-[35%] text-pink-200 text-xl falling opacity-50" style="animation-delay: 1.5s;">🌸</div>
+        <div class="absolute top-0 left-[55%] text-rose-200 text-lg falling opacity-70" style="animation-delay: 2.5s;">🌸</div>
+        <div class="absolute top-0 left-[75%] text-pink-300 text-xl falling opacity-40" style="animation-delay: 3.5s;">🌸</div>
+        <div class="absolute top-0 left-[95%] text-pink-200 text-lg falling opacity-60" style="animation-delay: 4.5s;">🌸</div>
+    </div>
+
+    <!-- 封面页 -->
+    <div id="cover-page" class="flex items-center justify-center min-h-screen p-8 cursor-pointer relative z-20" onclick="nextPage()">
+        <div class="text-center space-y-10 max-w-lg mx-auto">
+            <!-- 苹果图标 -->
+            <div class="text-8xl floating filter drop-shadow-2xl">🍎</div>
+            
+            <!-- 主文案 -->
+            <div class="glass-card rounded-3xl p-10 space-y-8 relative overflow-hidden">
+                <!-- 装饰性闪光效果 -->
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-aurora to-transparent shimmer-effect"></div>
+                
+                <div class="space-y-6">
+                    <h1 class="text-3xl font-script gradient-text font-bold">
+                        "吃苹果"的小秘密
+                    </h1>
+                    <p class="text-gray-200 text-lg leading-relaxed font-serif font-light">
+                        是只有你和他知道的亲密暗号
+                    </p>
+                    <div class="w-16 h-px bg-gradient-to-r from-aurora to-rose-glow mx-auto"></div>
+                    <p class="text-gray-300 text-base leading-relaxed font-serif">
+                        来吧，拿起这份问卷<br>
+                        <span class="gradient-text font-medium">一起品尝快乐</span>
+                    </p>
+                </div>
+                
+                <!-- 点击提示 -->
+                <div class="pt-6">
+                    <div class="inline-flex items-center space-x-3 px-8 py-4 glass-card rounded-full glow-effect group">
+                        <span class="text-white font-medium font-serif">点击任意位置开始</span>
+                        <div class="w-2 h-2 bg-aurora rounded-full animate-pulse"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 底部装饰 -->
+            <div class="flex justify-center space-x-4 opacity-40">
+                <div class="text-pink-300 text-sm">💕</div>
+                <div class="text-rose-300 text-sm">💖</div>
+                <div class="text-aurora text-sm">💗</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 输入页 -->
+    <div id="input-page" class="hidden min-h-screen p-8 flex flex-col justify-center relative z-20">
+        <!-- 顶部头像区域（动态生成） -->
+        <div id="avatar-area" class="fixed top-8 left-1/2 transform -translate-x-1/2 hidden z-30">
+            <div class="w-36 h-36 overflow-hidden glass-card p-1 glow-effect">
+                <img id="uploaded-avatar" class="w-full h-full object-cover" src="" alt="头像">
+            </div>
+        </div>
+
+        <div class="max-w-lg mx-auto space-y-10 mt-44">
+            <!-- 标题 -->
+            <div class="text-center space-y-4">
+                <h2 class="text-4xl font-script gradient-text font-bold">开始我们的秘密</h2>
+                <p class="text-gray-300 text-lg font-serif font-light">让我更了解那个特别的ta</p>
+                <div class="w-20 h-px bg-gradient-to-r from-aurora to-rose-glow mx-auto"></div>
+            </div>
+
+            <!-- 输入表单 -->
+            <div class="space-y-8">
+                <!-- 姓名输入 -->
+                <div class="glass-card rounded-2xl p-8 relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-aurora/50 to-transparent"></div>
+                    <label class="block text-gray-200 font-medium mb-4 flex items-center space-x-2 font-serif">
+                        <span>👤</span>
+                        <span>请输入mjg的名字</span>
+                    </label>
+                    <input 
+                        type="text" 
+                        id="userName" 
+                        placeholder="ta的名字..."
+                        autocomplete="off"
+                        class="w-full bg-black/30 border border-white/10 rounded-xl px-6 py-4 text-white placeholder-gray-400 focus:border-aurora focus:outline-none focus:ring-2 focus:ring-aurora/20 transition-all font-serif text-lg backdrop-blur-sm"
+                    >
+                </div>
+
+                <!-- 图片上传 -->
+                <div class="glass-card rounded-2xl p-8 relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-rose-glow/50 to-transparent"></div>
+                    <label class="block text-gray-200 font-medium mb-4 flex items-center space-x-2 font-serif">
+                        <span>📷</span>
+                        <span>上传mjg的照片</span>
+                    </label>
+                    <div class="relative">
+                        <input 
+                            type="file" 
+                            id="userPhoto" 
+                            accept="image/*"
+                            class="hidden"
+                            onchange="handleImageUpload(this)"
+                        >
+                        <label 
+                            for="userPhoto"
+                            class="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-white/20 rounded-xl cursor-pointer hover:border-aurora/50 transition-all group glass-card"
+                        >
+                            <div class="text-aurora text-5xl mb-3 group-hover:scale-110 transition-transform">📸</div>
+                            <span class="text-gray-300 font-medium font-serif">点击上传照片</span>
+                            <span class="text-gray-500 text-sm mt-1 font-serif">支持 JPG、PNG 格式</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 开始按钮 -->
+                <button 
+                    id="start-quiz-btn"
+                    onclick="startQuiz()"
+                    disabled
+                    class="w-full glass-button text-white py-5 rounded-xl font-semibold text-xl disabled:opacity-50 disabled:cursor-not-allowed hover:scale-[1.02] transition-all relative overflow-hidden group font-serif"
+                >
+                    <span class="relative z-10">开始心动问卷</span>
+                    <div class="absolute inset-0 bg-gradient-to-r from-aurora to-rose-glow opacity-0 group-hover:opacity-20 transition-opacity"></div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 问卷页 -->
+    <div id="quiz-page" class="hidden min-h-screen relative z-20">
+        <!-- 顶部头像（固定显示） -->
+        <div id="quiz-avatar" class="fixed top-6 left-1/2 transform -translate-x-1/2 z-30">
+            <div class="w-36 h-36 overflow-hidden glass-card p-1">
+                <img id="quiz-avatar-img" class="w-full h-full object-cover" src="" alt="头像">
+            </div>
+        </div>
+
+        <!-- 进度条 -->
+        <div class="fixed top-44 left-1/2 transform -translate-x-1/2 w-80 max-w-[90vw] z-30">
+            <div class="glass-card rounded-full p-2">
+                <div class="flex items-center justify-between text-sm text-gray-300 mb-2 font-serif">
+                    <span id="current-question">1</span>
+                    <span class="gradient-text font-medium font-chinese">心动问卷</span>
+                    <span>/ 25</span>
+                </div>
+                <div class="w-full bg-black/30 rounded-full h-2">
+                    <div id="progress-bar" class="bg-gradient-to-r from-aurora to-rose-glow h-2 rounded-full transition-all duration-500" style="width: 4%"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 问题内容区 -->
+        <div class="pt-60 pb-20 px-6 max-w-2xl mx-auto">
+            <div id="question-container" class="space-y-8">
+                <!-- 问题卡片 -->
+                <div class="glass-card rounded-3xl p-8 relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-aurora/50 to-transparent"></div>
+                    
+                    <!-- 问题文本 -->
+                    <h3 id="question-text" class="text-2xl font-chinese text-gray-100 leading-relaxed mb-8 text-left">
+                        <!-- 动态问题内容 -->
+                    </h3>
+
+                    <!-- 选项列表 -->
+                    <div id="options-container" class="space-y-4 mb-8">
+                        <!-- 动态选项内容 -->
+                    </div>
+
+                    <!-- 专属答案输入框 -->
+                    <div class="glass-card rounded-2xl p-6 border-dashed border-white/20">
+                        <label class="block text-gray-300 font-medium mb-3 flex items-center space-x-2 font-serif">
+                            <span>✨</span>
+                            <span>你的专属答案</span>
+                        </label>
+                        <textarea 
+                            id="custom-answer"
+                            placeholder="写下只属于你们的答案..."
+                            class="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:border-aurora focus:outline-none focus:ring-2 focus:ring-aurora/20 transition-all resize-none h-20 font-serif"
+                            oninput="toggleNextButton()"
+                        ></textarea>
+                        
+                        <!-- 下一题按钮 -->
+                        <button 
+                            id="next-question-btn"
+                            onclick="nextQuestionFromCustom()"
+                            class="hidden w-full mt-4 glass-button text-white py-3 rounded-xl font-medium hover:scale-[1.02] transition-all glow-effect font-serif"
+                        >
+                            下一题 →
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 音乐控制 -->
+        <div class="fixed bottom-6 left-6 z-30">
+            <button id="music-toggle" onclick="toggleMusic()" class="glass-card p-4 rounded-full hover:scale-105 transition-all">
+                <span id="music-icon" class="text-2xl">🎵</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- 情书生成页 -->
+    <div id="result-page" class="hidden min-h-screen relative z-20 p-4 flex items-center justify-center transition-all duration-1000">
+        <div class="max-w-4xl mx-auto w-full">
+            <!-- 网易云风格情书卡片 -->
+            <div id="love-letter-card" class="relative overflow-hidden shadow-2xl">
+                <!-- 主背景 -->
+                <div class="absolute inset-0 bg-gradient-to-br from-cosmic via-nebula to-midnight opacity-90"></div>
+                <!-- 动态颜色背景层 -->
+                <div id="dynamic-bg" class="absolute inset-0 opacity-20 transition-all duration-1000"></div>
+                
+                <!-- 玻璃拟态卡片 -->
+                <div class="relative glass-card rounded-3xl p-6 md:p-8 border-2 border-white/10 backdrop-blur-xl">
+                    <!-- 装饰性光效 -->
+                    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-aurora/70 to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-rose-glow/50 to-transparent"></div>
+                    
+                    <!-- 角落装饰 -->
+                    <div class="absolute top-4 left-4 w-3 h-3 bg-aurora/30 rounded-full"></div>
+                    <div class="absolute top-4 right-4 w-3 h-3 bg-rose-glow/30 rounded-full"></div>
+                    <div class="absolute bottom-4 left-4 w-3 h-3 bg-pink-dream/30 rounded-full"></div>
+                    <div class="absolute bottom-4 right-4 w-3 h-3 bg-aurora/30 rounded-full"></div>
+                
+                    <div class="flex flex-col lg:flex-row items-center space-y-8 lg:space-y-0 lg:space-x-8">
+                        <!-- 左侧：圆形画框头像 -->
+                        <div class="flex-shrink-0">
+                            <div class="relative">
+                                <!-- 圆形画框 -->
+                                <div class="w-40 h-40 md:w-48 md:h-48 rounded-full relative overflow-hidden shadow-2xl border-4 border-white/20 glass-card">
+                                    <!-- 用户头像填满整个圆形 -->
+                                    <img id="result-avatar" class="w-full h-full object-cover" src="" alt="头像">
+                                    
+                                    <!-- 画框内侧装饰 -->
+                                    <div class="absolute inset-0 rounded-full border-2 border-white/10"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 右侧：情书内容 -->
+                        <div class="flex-1 space-y-6 w-full">
+                            <!-- 标题 -->
+                            <div class="space-y-3 text-center lg:text-left">
+                                <h2 class="text-2xl md:text-3xl font-chinese gradient-text font-bold">你和<span id="result-name"></span>的浪漫情诗</h2>
+                                <p class="text-gray-300 text-sm font-serif font-light italic">在每个心动瞬间，谱写着只属于你们的爱情诗篇</p>
+                            </div>
+                            
+                            <!-- 情书内容 -->
+                            <div id="love-letter-content" class="space-y-4 text-gray-200 leading-relaxed font-serif text-base md:text-lg">
+                                <!-- 动态生成的情书内容 -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 操作按钮 -->
+                    <div class="mt-8 flex flex-col sm:flex-row justify-center items-center space-y-3 sm:space-y-0 sm:space-x-4">
+                        <button 
+                            onclick="generateNewLetter()"
+                            class="w-full sm:w-auto px-6 py-3 glass-card border border-white/20 text-white rounded-xl hover:border-aurora/50 transition-all font-medium font-serif"
+                        >
+                            🎲 重新生成
+                        </button>
+                        
+                        <button 
+                            onclick="restartQuiz()"
+                            class="w-full sm:w-auto px-6 py-3 glass-card border border-white/20 text-white rounded-xl hover:border-rose-glow/50 transition-all font-medium font-serif"
+                        >
+                            🔄 重新填写
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 预览按钮 -->
+    <button onclick="togglePreview()" class="fixed bottom-6 right-6 glass-button text-white px-6 py-3 rounded-xl font-medium hover:scale-105 transition-all z-40 shadow-lg font-serif">
+        🔍 页面预览
+    </button>
+
+    <script>
+        let currentPage = 'cover';
+        let userName = '';
+        let userAvatar = '';
+        let quizAnswers = [];
+        let currentQuestionIndex = 0;
+        let selectedOptions = []; // 用于多选题
+
+        // 问卷数据
+        const questions = [
+            {
+                id: 1,
+                text: '你们"吃苹果"时，最喜欢哪个地点？',
+                options: [
+                    '他的办公室/书房',
+                    '玄关穿衣镜前', 
+                    '卧室大床',
+                    '客厅柔软的毛毯/沙发',
+                    '刺激的公共场所边缘（如地下车库、假期你们学校的课桌下）'
+                ]
+            },
+            {
+                id: 2,
+                text: '通常，是谁先暗示想"吃苹果"？',
+                options: [
+                    '他（眼神变得幽深，带着不容置疑）',
+                    '他（用指尖若有似无地划过你的敏感带，嘴角噙着笑）',
+                    '他（从背后环抱住你，下巴抵在你肩头，呼吸变有点重）',
+                    '你（故意蹭到他怀里，他愣了一下随即扣紧你的腰）',
+                    '你（一个眼神，他就读懂并化被动为主动）'
+                ]
+            },
+            {
+                id: 3,
+                text: `在"吃苹果"开始前，他最喜欢亲吻/抚摸你身体的哪个敏感带？`,
+                options: [
+                    '鼻尖',
+                    '后腰凹陷的弧度',
+                    '颈窝/锁骨',
+                    '蝴蝶骨',
+                    '你耳后/嘴边/眼下那颗小痣'
+                ]
+            },
+            {
+                id: 4,
+                text: `你最喜欢他身体的哪个部位在"吃苹果"时展现的性感？`,
+                options: [
+                    '他滚动的喉结和压抑的低喘',
+                    '手臂绷起的青筋和爆发的力量感',
+                    '后背绷紧如弓弦的完美肌肉线条',
+                    '汗珠滑过他锁骨、胸肌的轨迹',
+                    '他平时冷静自持的眼神彻底失控'
+                ]
+            },
+            {
+                id: 5,
+                text: '前戏时，最让你心跳失衡的一个标志性小动作是什么？',
+                options: [
+                    '慢条斯理解开你一颗纽扣，眼神锁住你',
+                    '指尖若有似无地划过你的腰线或大腿内侧，引起战栗',
+                    '突然把你抱上桌子上，与他平视，双手撑在你两侧',
+                    '用他的领带轻轻蒙住你的眼睛，剥夺视觉',
+                    '捧住你的脸，拇指摩挲你的下唇，眼神温柔得能溺死人'
+                ]
+            },
+            {
+                id: 6,
+                text: `他"品尝苹果"时，他指尖最迷恋你身体的哪一处？`,
+                options: [
+                    '腰侧细腻的肌肤，仿佛一用力就会留下指痕',
+                    '胸前的柔软曲线，总像捧着易碎的珍宝般小心翼翼',
+                    '大腿内侧的绷紧，在他掌下随着每次触碰轻轻颤动',
+                    '脊背光滑的曲线，一路向下探索隐秘的腰窝',
+                    '后颈，仿佛猛兽叼住猎物要害'
+                ]
+            },
+            {
+                id: 7,
+                text: `他"品尝苹果"时，你最清晰地感觉到他存在的瞬间是？`,
+                options: [
+                    '他滚烫的呼吸带着低喘，重重喷在你敏感的颈窝/耳后',
+                    '他带着薄茧的指腹（或冰凉的戒指/腕表）擦过你娇嫩的肌肤',
+                    '他宽厚的身体完全覆盖你，将你禁锢在他的气息与体温中',
+                    '他呢喃着你的名字，以一种宣告主权的方式彻底占有',
+                    '他的眼眸一瞬不瞬地盯着你，捕捉你每一个细微表情'
+                ]
+            },
+            {
+                id: 8,
+                text: '他在最沉迷的时刻，会咬着你的耳朵，用沙哑的声音说出什么话？',
+                options: [
+                    '"这里......从里到外都刻上我的名字了。"',
+                    '"标记了，跑不掉了。"',
+                    '"宝贝，你里面......比我想象的还要贪吃。"',
+                    '"好爱你......怎么爱你都不够......抱紧我，别松开。"',
+                    '"......不许看别人！只准想着我！"'
+                ]
+            },
+            {
+                id: 9,
+                text: '他最喜欢你身体给出哪种回应？',
+                options: [
+                    '难耐地扭动腰肢，无意识寻求更多',
+                    '指尖深深陷入他后背，留下抓痕',
+                    '带着哭腔的呜咽和破碎的求饶',
+                    '主动迎合的摆动和热情的回吻',
+                    '无意识地用小腿勾缠他的腰，或是用脸颊蹭他汗湿的胸膛'
+                ]
+            },
+            {
+                id: 10,
+                text: `在非卧室的地点，"吃苹果"有什么独特的刺激和乐趣？`,
+                options: [
+                    '浴室：镜中交叠的身影，氤氲水汽中朦胧的性感',
+                    '书房：严肃场所的背德感，纸张声、皮革椅的触感',
+                    '车上：狭小空间，随时随地可能被发现的隐秘快感',
+                    '厨房：冰凉岛台，穿着他的衬衫做早餐，惹他拦腰抱上',
+                    '阳台：夜风习习，城市灯火为背景的浪漫'
+                ]
+            },
+            // 继续添加其他15道题...
+            {
+                id: 11,
+                text: '他有没有在某个意想不到甚至有点危险的地点，突然对你产生"吃苹果"的强烈欲望？',
+                options: [
+                    '公司茶水间（借口把你拉进隔间）',
+                    '朋友聚会的阳台（借着夜色的掩护，手不安分地游走）',
+                    '安静的图书馆角落（压低声音在你耳边说露骨的话，看你脸红）',
+                    '拥挤的电梯里（用身体护住你，低头用灼热的眼神看你）',
+                    '朋友聚餐的洗手间外（把你堵在拐角索吻）'
+                ]
+            },
+            {
+                id: 12,
+                text: '他是否曾特别痴迷地"标记"你身体的某个平时不被注意的部位？',
+                options: [
+                    '脚踝（喜欢握在掌中,留下吻痕）',
+                    '耳垂（反复吮吸轻咬，让你浑身发软）',
+                    '腰窝（指尖流连忘返，欣赏它的美妙凹陷）',
+                    '手指（一根根亲吻吮吸，情色又虔诚）',
+                    '膝盖内侧（发现这里的异常敏感，乐此不疲地探索）'
+                ]
+            },
+            {
+                id: 13,
+                text: `哪种衣物/配饰在"吃苹果"时最能刺激到他/你？（可多选）`,
+                options: [
+                    '你：穿着他的宽大衬衫',
+                    '你：仅戴着项链',
+                    '你：蕾丝长筒袜',
+                    '他：松垮的领带',
+                    '他：解开几颗扣子的衬衫'
+                ],
+                multiSelect: true
+            },
+            {
+                id: 14,
+                text: '他会在你主动时，用什么话鼓励你？',
+                options: [
+                    '"宝贝今天这么乖？主动的样子......真让人把持不住。"',
+                    '"宝贝好棒，对！就这样！别停......"',
+                    '"学得很快嘛......看来平时没少偷学？"',
+                    '"别紧张，慢慢来，我在呢......你很美。"',
+                    '"......哼，这不是做得很好嘛！"'
+                ]
+            },
+            {
+                id: 15,
+                text: '温存时，他最喜欢用哪个部位眷恋地蹭你身体哪个地方？',
+                options: [
+                    '用鼻尖蹭你汗湿的鬓角/颈窝',
+                    '脸颊贴着你平坦的小腹/胸口',
+                    '嘴唇流连在你肩头/锁骨，轻啄浅吻',
+                    '额头相抵，呼吸交融',
+                    '用下巴上的胡茬轻轻磨蹭你敏感的肩颈'
+                ]
+            },
+            {
+                id: 16,
+                text: '当他看着你因他而绽放的模样，他内心深处最强烈的念头是什么？',
+                options: [
+                    '"她是我的，从头到脚，从身到心，永生永世。"',
+                    '"想把她揉进骨血里，一刻也不分离。"',
+                    '"这模样......绝对、绝对不许第二个人看到！"',
+                    '"怎么爱她都爱不够......想把全世界都给她。"',
+                    '"是我让她变成这样的......只有我能做到。"'
+                ]
+            },
+            {
+                id: 17,
+                text: '事后清理时，他哪个不经意的小动作让你觉得特别温柔/性感？',
+                options: [
+                    '用温热的湿毛巾仔细擦拭你每一寸肌肤，动作轻柔',
+                    '帮你把汗湿的乱发温柔地别到耳后，指尖划过耳廓',
+                    '捡起散落一地的衣物，甚至笨拙地试图帮你穿上',
+                    '突然将你打横抱起，径直走向浴室清理',
+                    '清理时，指尖若有似无地滑过敏感带，引起你细微颤抖'
+                ]
+            },
+            {
+                id: 18,
+                text: '这时你听到他的心跳声，感觉如何？',
+                options: [
+                    '沉稳有力，像安抚的鼓点，让你无比安心',
+                    '依然快速鼓动，与你紊乱的心跳同频，他也未平复',
+                    '和自己的心跳渐渐同步，仿佛融为一体',
+                    '是世界上最动听的声音，他因你而存在',
+                    '每一下都在诉说着爱意，比任何情话都动人'
+                ]
+            },
+            {
+                id: 19,
+                text: '在余韵中，他无意间流露出的哪个小细节最让你心动？',
+                options: [
+                    '一声满足的、悠长的叹息，像卸下所有重担',
+                    '无意识地把玩你的一缕头发，绕在指尖',
+                    '将你更紧地搂向怀里，下巴抵在你发顶，仿佛怕你消失',
+                    '闭着眼，嘴角却带着一丝餍足的、近乎孩子气的微笑',
+                    '深深望着你，眼神里有未退的情潮和浓得化不开的爱意'
+                ]
+            },
+            {
+                id: 20,
+                text: '他会不会在事后突然变得很......？',
+                options: [
+                    '粘人（像大型犬一样贴着你，索要亲吻拥抱）',
+                    '话痨（突然开始说很多情话或未来畅想）',
+                    '困倦（很快沉沉睡去，手臂还紧紧圈着你）',
+                    '若有所思（安静地看着你，眼神深邃）',
+                    '重新燃起小火苗（手又开始不安分......）'
+                ]
+            },
+            {
+                id: 21,
+                text: '有没有一个特别的"吃苹果"地点，对你们有特别的象征意义？',
+                options: [
+                    '初次的地点',
+                    '某个重要的纪念日/事件后的场所',
+                    '一个曾有过争执或误会，最终在此和解并更亲密的地方',
+                    '一个条件艰苦但心靠得最近的地方',
+                    '代表"家"的地方'
+                ]
+            },
+            {
+                id: 22,
+                text: '在"吃苹果"这件事上，他给过你最深刻的安全感/被珍视感是什么？',
+                options: [
+                    '无论多激动，始终关注你的感受和反应，及时调整',
+                    '事前事后的清洁、照顾亲力亲为',
+                    '明确表示并尊重你的所有界限和"安全词"',
+                    '在亲密中/后，反复用言语和行动确认"爱你"、"你是唯一的"',
+                    '在你心情不佳/不适时，能立刻停下并转为纯粹的拥抱安慰'
+                ]
+            },
+            {
+                id: 23,
+                text: '你觉得"吃苹果"这件事，对你们的关系意味着什么？',
+                options: [
+                    '最原始也最深刻的爱的语言',
+                    '灵魂与身体的双重联结，缺一不可',
+                    '他宣示主权和独占的方式，也是我确认归属的方式',
+                    '探索彼此、获得极致快乐的秘密游戏',
+                    '疲惫世界里唯一的避风港，可以充电的地方'
+                ]
+            },
+            {
+                id: 24,
+                text: '经历过无数次"吃苹果"，你们之间最珍贵的变化是什么？',
+                options: [
+                    '无言的默契，一个眼神、一个呼吸就知道对方想要什么',
+                    '极致的信任，将身体和灵魂最脆弱的部分完全交付对方',
+                    '无法割舍的羁绊，早已超越肉体欢愉，成为彼此生命的一部分',
+                    '共同探索的乐趣，不断发现新的快乐模式和彼此的敏感点',
+                    '绝对的安心，知道无论何时何地，对方都是最渴望和接纳自己的人'
+                ]
+            },
+            {
+                id: 25,
+                text: '如果你们的爱情有一种专属的"苹果香气"，它会是什么味道？',
+                options: [
+                    '烈酒混合清甜果香',
+                    '雪松与温暖的琥珀',
+                    '雨后青草与阳光的味道',
+                    '浓郁的黑巧克力与诱人红酒香',
+                    '海风咸涩与香橙的酸甜'
+                ]
+            }
+        ];
+
+        // 切换预览模式
+        function togglePreview() {
+            const preview = document.getElementById('preview-mode');
+            preview.classList.toggle('hidden');
+        }
+
+        // 显示指定页面
+        function showPage(page) {
+            // 隐藏所有页面
+            document.querySelectorAll('[id$="-page"]').forEach(p => p.classList.add('hidden'));
+            // 显示目标页面
+            document.getElementById(page + '-page').classList.remove('hidden');
+            currentPage = page;
+            
+            // 如果切换到问卷页，显示头像
+            if (page === 'quiz' && userAvatar) {
+                document.getElementById('quiz-avatar-img').src = userAvatar;
+                document.getElementById('quiz-avatar').classList.remove('hidden');
+            }
+        }
+
+        // 下一页
+        function nextPage() {
+            if (currentPage === 'cover') {
+                showPage('input');
+            }
+        }
+
+        // 处理图片上传
+        function handleImageUpload(input) {
+            const file = input.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    userAvatar = e.target.result;
+                    // 显示头像
+                    const avatarImg = document.getElementById('uploaded-avatar');
+                    avatarImg.src = userAvatar;
+                    document.getElementById('avatar-area').classList.remove('hidden');
+                    
+                    checkInputComplete();
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // 检查输入是否完整
+        function checkInputComplete() {
+            const name = document.getElementById('userName').value.trim();
+            const photo = userAvatar;
+            const btn = document.getElementById('start-quiz-btn');
+            
+            if (name && photo) {
+                btn.disabled = false;
+                btn.classList.add('glow-effect');
+            } else {
+                btn.disabled = true;
+                btn.classList.remove('glow-effect');
+            }
+        }
+
+        // 开始问卷
+        function startQuiz() {
+            userName = document.getElementById('userName').value.trim();
+            showPage('quiz');
+            displayQuestion(0);
+        }
+
+        // 显示问题
+        function displayQuestion(index) {
+            if (index >= questions.length) {
+                // 问卷完成，跳转到结果页
+                generateLoveLetter();
+                return;
+            }
+
+            currentQuestionIndex = index;
+            const question = questions[index];
+            
+            // 重置多选状态
+            selectedOptions = [];
+            
+            // 更新进度
+            document.getElementById('current-question').textContent = index + 1;
+            document.getElementById('progress-bar').style.width = ((index + 1) / questions.length * 100) + '%';
+            
+            // 更新问题文本，动态插入姓名
+            let questionText = question.text.replace(/mjg/g, userName);
+            
+            // 处理"他"的替换：每个问题独立计算，第一次出现替换为用户名，第二次保持"他"
+            const heRegex = /他/g;
+            let heCount = 0;
+            questionText = questionText.replace(heRegex, (match) => {
+                heCount++;
+                return heCount === 1 ? userName : '他';
+            });
+            
+            document.getElementById('question-text').textContent = questionText;
+            
+            // 清空并重新生成选项
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+            
+            question.options.forEach((option, optionIndex) => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'glass-card rounded-xl p-4 cursor-pointer hover:border-aurora/50 transition-all group';
+                
+                // 处理选项文本中的括号内容
+                const formattedOption = formatOptionText(option);
+                
+                const checkboxType = question.multiSelect ? 'checkbox' : 'radio';
+                
+                optionDiv.innerHTML = `
+                    <div class="flex items-start space-x-3">
+                        <div class="w-6 h-6 ${question.multiSelect ? 'rounded-md' : 'rounded-full'} border-2 border-white/30 flex-shrink-0 mt-1 group-hover:border-aurora transition-all flex items-center justify-center">
+                            ${question.multiSelect ? '<div class="hidden w-3 h-3 bg-aurora rounded-sm"></div>' : ''}
+                        </div>
+                        <div class="text-gray-200 group-hover:text-white transition-all font-serif">${formattedOption}</div>
+                    </div>
+                `;
+                
+                if (question.multiSelect) {
+                    optionDiv.onclick = () => toggleMultiOption(optionIndex, option, optionDiv);
+                } else {
+                    optionDiv.onclick = () => selectOption(optionIndex, option, optionDiv);
+                }
+                
+                optionsContainer.appendChild(optionDiv);
+            });
+            
+            // 如果是多选题，添加确认按钮
+            if (question.multiSelect) {
+                const confirmDiv = document.createElement('div');
+                confirmDiv.innerHTML = `
+                    <button 
+                        id="confirm-multi-btn"
+                        onclick="confirmMultiSelection()"
+                        class="w-full mt-4 glass-button text-white py-3 rounded-xl font-medium hover:scale-[1.02] transition-all opacity-50 cursor-not-allowed font-serif"
+                        disabled
+                    >
+                        确认选择
+                    </button>
+                `;
+                optionsContainer.appendChild(confirmDiv);
+            }
+            
+            // 清空自定义答案和隐藏下一题按钮
+            document.getElementById('custom-answer').value = '';
+            document.getElementById('next-question-btn').classList.add('hidden');
+        }
+
+        // 多选题选项切换
+        function toggleMultiOption(index, text, element) {
+            const checkbox = element.querySelector('.w-6 > div');
+            const isSelected = selectedOptions.includes(index);
+            
+            if (isSelected) {
+                // 取消选择
+                selectedOptions = selectedOptions.filter(i => i !== index);
+                element.classList.remove('bg-aurora/20', 'border-aurora');
+                checkbox.classList.add('hidden');
+            } else {
+                // 添加选择
+                selectedOptions.push(index);
+                element.classList.add('bg-aurora/20', 'border-aurora');
+                checkbox.classList.remove('hidden');
+            }
+            
+            // 更新确认按钮状态
+            const confirmBtn = document.getElementById('confirm-multi-btn');
+            if (selectedOptions.length > 0) {
+                confirmBtn.disabled = false;
+                confirmBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                confirmBtn.classList.add('glow-effect');
+            } else {
+                confirmBtn.disabled = true;
+                confirmBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                confirmBtn.classList.remove('glow-effect');
+            }
+        }
+
+        // 确认多选答案
+        function confirmMultiSelection() {
+            const question = questions[currentQuestionIndex];
+            const selectedTexts = selectedOptions.map(index => question.options[index]);
+            const customAnswer = document.getElementById('custom-answer').value.trim();
+            
+            quizAnswers[currentQuestionIndex] = {
+                questionId: question.id,
+                selectedOption: selectedTexts,
+                customAnswer: customAnswer,
+                questionText: question.text,
+                multiSelect: true
+            };
+            
+            // 跳转到下一题
+            setTimeout(() => {
+                displayQuestion(currentQuestionIndex + 1);
+            }, 500);
+        }
+
+        // 格式化选项文本，处理括号内容
+        function formatOptionText(text) {
+            return text.replace(/（([^）]*)）/g, '<span class="text-sm text-gray-400 font-light">（$1）</span>');
+        }
+
+        // 切换下一题按钮显示
+        function toggleNextButton() {
+            const customAnswer = document.getElementById('custom-answer').value.trim();
+            const nextBtn = document.getElementById('next-question-btn');
+            
+            if (customAnswer) {
+                nextBtn.classList.remove('hidden');
+            } else {
+                nextBtn.classList.add('hidden');
+            }
+        }
+
+        // 从自定义答案进入下一题
+        function nextQuestionFromCustom() {
+            const customAnswer = document.getElementById('custom-answer').value.trim();
+            const question = questions[currentQuestionIndex];
+            
+            // 保存自定义答案
+            quizAnswers[currentQuestionIndex] = {
+                questionId: question.id,
+                selectedOption: question.multiSelect ? selectedOptions.map(index => question.options[index]) : null,
+                customAnswer: customAnswer,
+                questionText: question.text,
+                multiSelect: question.multiSelect || false
+            };
+            
+            // 跳转到下一题
+            displayQuestion(currentQuestionIndex + 1);
+        }
+
+        // 选择选项（单选题）
+        function selectOption(index, text, element) {
+            const question = questions[currentQuestionIndex];
+            
+            // 如果是多选题，不处理
+            if (question.multiSelect) return;
+            
+            // 移除其他选项的选中状态
+            document.querySelectorAll('#options-container > div:not(:last-child)').forEach(div => {
+                div.classList.remove('bg-aurora/20', 'border-aurora');
+                div.querySelector('.w-6').classList.remove('bg-aurora');
+            });
+            
+            // 添加选中状态
+            element.classList.add('bg-aurora/20', 'border-aurora');
+            element.querySelector('.w-6').classList.add('bg-aurora');
+            
+            // 保存答案
+            const customAnswer = document.getElementById('custom-answer').value.trim();
+            quizAnswers[currentQuestionIndex] = {
+                questionId: question.id,
+                selectedOption: text,
+                customAnswer: customAnswer,
+                questionText: question.text
+            };
+            
+            // 隐藏下一题按钮（因为选择了选项会自动跳转）
+            document.getElementById('next-question-btn').classList.add('hidden');
+            
+            // 延迟跳转到下一题
+            setTimeout(() => {
+                displayQuestion(currentQuestionIndex + 1);
+            }, 800);
+        }
+
+        // 音乐控制
+        function toggleMusic() {
+            const audio = document.getElementById('background-music');
+            const icon = document.getElementById('music-icon');
+            
+            if (isPlaying) {
+                audio.pause();
+                icon.textContent = '🎵';
+                isPlaying = false;
+            } else {
+                playBackgroundMusic();
+            }
+        }
+
+        function playBackgroundMusic() {
+            const audio = document.getElementById('background-music');
+            const icon = document.getElementById('music-icon');
+            
+            // 由于浏览器限制，需要用户交互后才能播放
+            audio.play().then(() => {
+                isPlaying = true;
+                icon.textContent = '🎶';
+            }).catch((error) => {
+                console.log('音频播放被阻止:', error);
+                icon.textContent = '🔇';
+            });
+        }
+
+        // 生成情书
+        function generateLoveLetter() {
+            showPage('result');
+            
+            // 设置头像和姓名
+            document.getElementById('result-avatar').src = userAvatar;
+            document.getElementById('result-name').textContent = userName;
+            
+            // 提取图片主色调并应用背景
+            if (userAvatar) {
+                extractDominantColorAndApplyBackground(userAvatar);
+            }
+            
+            // 生成情书内容
+            createLoveLetterContent();
+        }
+
+        // 提取图片主色调并应用背景
+        function extractDominantColorAndApplyBackground(imageSrc) {
+            const img = new Image();
+            img.crossOrigin = 'anonymous';
+            img.onload = function() {
+                try {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    
+                    // 设置canvas大小
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    
+                    // 绘制图像
+                    ctx.drawImage(img, 0, 0);
+                    
+                    // 获取图像数据
+                    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    const data = imageData.data;
+                    
+                    // 计算主色调
+                    const colorCount = {};
+                    const step = 20; // 采样步长，提高性能
+                    
+                    for (let i = 0; i < data.length; i += step * 4) {
+                        const r = Math.round(data[i] / 32) * 32;
+                        const g = Math.round(data[i + 1] / 32) * 32;
+                        const b = Math.round(data[i + 2] / 32) * 32;
+                        const alpha = data[i + 3];
+                        
+                        if (alpha > 125) { // 忽略透明像素
+                            const color = `${r},${g},${b}`;
+                            colorCount[color] = (colorCount[color] || 0) + 1;
+                        }
+                    }
+                    
+                    // 找出最常见的颜色
+                    let dominantColor = '233,30,99'; // 默认aurora色
+                    let maxCount = 0;
+                    
+                    for (const color in colorCount) {
+                        if (colorCount[color] > maxCount) {
+                            maxCount = colorCount[color];
+                            dominantColor = color;
+                        }
+                    }
+                    
+                    // 应用到背景
+                    applyDynamicBackground(dominantColor);
+                    
+                } catch (error) {
+                    console.log('颜色提取失败，使用默认色彩:', error);
+                    applyDynamicBackground('233,30,99'); // 使用默认aurora色
+                }
+            };
+            
+            img.onerror = function() {
+                console.log('图片加载失败，使用默认色彩');
+                applyDynamicBackground('233,30,99');
+            };
+            
+            img.src = imageSrc;
+        }
+
+        // 应用动态背景色
+        function applyDynamicBackground(rgbColor) {
+            const dynamicBg = document.getElementById('dynamic-bg');
+            if (dynamicBg) {
+                // 创建基于主色调的渐变
+                const gradient = `linear-gradient(135deg, 
+                    rgba(${rgbColor}, 0.3) 0%, 
+                    rgba(${rgbColor}, 0.1) 50%, 
+                    rgba(${rgbColor}, 0.2) 100%)`;
+                
+                dynamicBg.style.background = gradient;
+                
+                // 同时更新页面整体背景
+                const resultPage = document.getElementById('result-page');
+                resultPage.style.background = `radial-gradient(ellipse at center, rgba(${rgbColor}, 0.1) 0%, rgba(26, 26, 46, 0.9) 100%)`;
+            }
+        }
+
+        // 创建情书内容
+        function createLoveLetterContent() {
+            // 过滤有效答案（有选择或自定义回答的）
+            const validAnswers = quizAnswers.filter(answer => 
+                (answer.selectedOption && answer.selectedOption.length > 0) || 
+                (answer.customAnswer && answer.customAnswer.trim())
+            );
+            
+            // 随机选择3个问答
+            const selectedAnswers = getRandomItems(validAnswers, 3);
+            
+            // 生成情书段落
+            const letterContent = document.getElementById('love-letter-content');
+            letterContent.innerHTML = '';
+            
+            selectedAnswers.forEach((answer, index) => {
+                const paragraph = createLoveLetterParagraph(answer, index);
+                letterContent.appendChild(paragraph);
+            });
+        }
+
+        // 创建情书段落
+        function createLoveLetterParagraph(answer, index) {
+            const div = document.createElement('div');
+            div.className = 'relative group mb-6';
+            
+            // 主内容容器 - 玻璃拟态方框
+            const contentBox = document.createElement('div');
+            contentBox.className = 'relative backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-6 shadow-2xl';
+            
+            // 倒影效果
+            const reflection = document.createElement('div');
+            reflection.className = 'absolute top-full left-0 right-0 h-full backdrop-blur-xl bg-white/2 border border-white/5 rounded-2xl opacity-30 transform scale-y-[-1] translate-y-2 pointer-events-none';
+            reflection.style.maskImage = 'linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, transparent 70%)';
+            reflection.style.webkitMaskImage = 'linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, transparent 70%)';
+            
+            // 转换问题为情书语句
+            let letterText = '';
+            const questionText = answer.questionText.replace(/mjg/g, userName);
+            
+            // 使用自定义答案优先，否则使用选项
+            const userResponse = answer.customAnswer && answer.customAnswer.trim() 
+                ? answer.customAnswer 
+                : (Array.isArray(answer.selectedOption) 
+                    ? answer.selectedOption.join('，') 
+                    : answer.selectedOption);
+            
+            if (userResponse) {
+                letterText = convertToLoveLetter(questionText, userResponse, userName);
+                // 将情书内容中的"他"替换为用户名字
+                letterText = letterText.replace(/他/g, userName);
+            }
+            
+            contentBox.innerHTML = `
+                <div class="flex items-center space-x-2 mb-4">
+                    <div class="w-6 h-6 rounded-full bg-gradient-to-r from-pink-400/60 to-rose-400/60 flex items-center justify-center shadow-sm backdrop-blur-sm">
+                        <span class="text-white text-xs font-bold">${index + 1}</span>
+                    </div>
+                    <p class="text-gray-400 italic text-xs font-serif opacity-80">第${index + 1}章</p>
+                </div>
+                <p class="text-gray-100 leading-relaxed text-base font-serif group-hover:text-white transition-colors duration-300">${letterText}</p>
+            `;
+            
+            // 组装元素
+            div.appendChild(contentBox);
+            div.appendChild(reflection);
+            
+            return div;
+        }
+
+        // 将问答转换为情书语句
+        function convertToLoveLetter(question, answer, name) {
+            // 移除问号和疑问词，然后连接答案
+            let processedQuestion = question
+                .replace(/[？?]/g, '') // 移除问号
+                .replace(/是否/g, '') // 移除"是否"
+                .replace(/什么\w*/g, '') // 移除"什么XXX"疑问词
+                .replace(/哪个\w*/g, '') // 移除"哪个XXX"疑问词
+                .replace(/哪种\w*/g, '') // 移除"哪种XXX"疑问词
+                .replace(/哪里\w*/g, '') // 移除"哪里XXX"疑问词
+                .replace(/怎么\w*/g, '') // 移除"怎么XXX"疑问词
+                .replace(/如何\w*/g, '') // 移除"如何XXX"疑问词
+                .replace(/时$/g, '') // 移除结尾的"时"
+                .replace(/吗$/g, '') // 移除结尾的"吗"
+                .replace(/呢$/g, '') // 移除结尾的"呢"
+                .trim();
+            
+            // 根据问题类型添加逻辑词"是"
+            
+            // 如果问题以"当"开头，保持这种表述，并加入"是"
+            if (processedQuestion.startsWith('当')) {
+                return `${processedQuestion}，是${answer}。`;
+            }
+            
+            // 如果问题以"有没有"开头，转换为陈述句
+            if (processedQuestion.startsWith('有没有')) {
+                processedQuestion = processedQuestion.replace('有没有', '');
+                return `${processedQuestion}，是${answer}。`;
+            }
+            
+            // 如果问题以"你觉得"开头，转换为陈述句
+            if (processedQuestion.startsWith('你觉得')) {
+                processedQuestion = processedQuestion.replace('你觉得', '');
+                return `关于${processedQuestion}，是${answer}。`;
+            }
+            
+            // 如果问题以"在"开头（比如"在余韵中"），保持表述并加入"是"
+            if (processedQuestion.startsWith('在')) {
+                return `${processedQuestion}，是${answer}。`;
+            }
+            
+            // 处理包含"最"的问题
+            if (processedQuestion.includes('最')) {
+                return `${processedQuestion}，是${answer}。`;
+            }
+            
+            // 处理"他会不会"类型的问题
+            if (processedQuestion.includes('会不会')) {
+                processedQuestion = processedQuestion.replace('会不会', '会');
+                return `${processedQuestion}，是${answer}。`;
+            }
+            
+            // 处理其他疑问句转陈述句
+            if (processedQuestion.includes('是谁') || processedQuestion.includes('谁')) {
+                processedQuestion = processedQuestion.replace(/是谁|谁/g, '');
+                return `${processedQuestion}，是${answer}。`;
+            }
+            
+            // 处理地点、感受等类型的问题，直接加入"是"
+            if (processedQuestion.includes('地点') || processedQuestion.includes('感觉') || processedQuestion.includes('瞬间') || processedQuestion.includes('部位')) {
+                return `${processedQuestion}，是${answer}。`;
+            }
+            
+            // 默认格式，加入"是"增加逻辑性
+            return `${processedQuestion}，是${answer}。`;
+        }
+
+        // 随机选择数组中的项目
+        function getRandomItems(array, count) {
+            const shuffled = array.sort(() => 0.5 - Math.random());
+            return shuffled.slice(0, Math.min(count, array.length));
+        }
+
+        // 重新生成情书
+        function generateNewLetter() {
+            createLoveLetterContent();
+            // 重新应用颜色背景
+            if (userAvatar) {
+                extractDominantColorAndApplyBackground(userAvatar);
+            }
+        }
+
+        // 重新开始问卷
+        function restartQuiz() {
+            if (confirm('确定要重新开始吗？这会清空当前的所有答案。')) {
+                // 重置所有数据
+                userName = '';
+                userAvatar = '';
+                quizAnswers = [];
+                currentQuestionIndex = 0;
+                selectedOptions = [];
+                
+                // 清空表单
+                document.getElementById('userName').value = '';
+                document.getElementById('userPhoto').value = '';
+                document.getElementById('avatar-area').classList.add('hidden');
+                document.getElementById('quiz-avatar').classList.add('hidden');
+                
+                // 返回输入页
+                showPage('input');
+            }
+        }
+
+        // 监听姓名输入
+        document.getElementById('userName').addEventListener('input', checkInputComplete);
+
+        // 初始化动画
+        function initAnimations() {
+            setInterval(() => {
+                // 重新启动飘落动画，只有爱心和樱花
+                const hearts = ['💕', '💖', '💗', '💝'];
+                const flowers = ['🌸'];
+                const allElements = [...hearts, ...flowers];
+                const colors = ['text-aurora', 'text-rose-glow', 'text-pink-dream', 'text-pink-300', 'text-pink-200'];
+                const positions = ['5%', '15%', '25%', '35%', '45%', '55%', '65%', '75%', '85%', '95%'];
+                
+                const randomElement = allElements[Math.floor(Math.random() * allElements.length)];
+                const randomColor = colors[Math.floor(Math.random() * colors.length)];
+                const randomPos = positions[Math.floor(Math.random() * positions.length)];
+                const randomSize = ['text-lg', 'text-xl'][Math.floor(Math.random() * 2)];
+                const randomDelay = Math.random() * 2;
+                const randomOpacity = ['opacity-40', 'opacity-50', 'opacity-60', 'opacity-70'][Math.floor(Math.random() * 4)];
+                
+                const element = document.createElement('div');
+                element.className = `absolute top-0 ${randomColor} ${randomSize} falling pointer-events-none ${randomOpacity}`;
+                element.style.left = randomPos;
+                element.style.animationDelay = randomDelay + 's';
+                element.textContent = randomElement;
+                
+                document.getElementById('animation-bg').appendChild(element);
+                
+                // 清理旧元素
+                setTimeout(() => {
+                    if (element.parentNode) {
+                        element.parentNode.removeChild(element);
+                    }
+                }, 10000);
+            }, 5000); // 减少生成频率，避免过多
+        }
+
+        // 启动动画
+        initAnimations();
+    </script>
+</body>
+</html>
